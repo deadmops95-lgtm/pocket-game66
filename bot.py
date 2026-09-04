@@ -4,8 +4,12 @@ from aiogram.filters import Command
 from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 import asyncio
 
-# Вставь сюда свой токен между кавычками:
+# 1. Вставь сюда токен твоего бота между кавычками
 TOKEN = "8991300297:AAGP__SbLKFoPL-EZvsNvt85U1hilx3rqdg"
+
+# 2. Сюда позже вставишь ссылку на свой сайт с GitHub (когда разберешься)
+# А пока для теста можно оставить любую или заглушку
+WEB_APP_URL = "https://example.com" 
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -60,11 +64,8 @@ async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     register_user(user_id)
     
-    # Ссылка на твое мини-приложение (пока локальная или адрес хостинга)
-    web_app_url = "https://example.com" # Позже заменим на твою ссылку
-
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🎮 Играть в Nexomon", web_app=WebAppInfo(url=web_app_url))]
+        [InlineKeyboardButton(text="🎮 Играть в Nexomon", web_app=WebAppInfo(url=WEB_APP_URL))]
     ])
     
     await message.answer(
