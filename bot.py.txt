@@ -1,0 +1,84 @@
+import sqlite3
+from aiogram import Bot, Dispatcher, types
+from aiogram.filters import Command
+from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
+import asyncio
+
+# Вставь сюда свой токен между кавычками:
+TOKEN = "8991300297:AAGP__SbLKFoPL-EZvsNvt85U1hilx3rqdg"
+
+bot = Bot(token=TOKEN)
+dp = Dispatcher()
+
+# --- БАЗА ДАННЫХ (SQLite) ---
+def init_db():
+    conn = sqlite3.connect("game.db")
+    cursor = conn.cursor()
+    # Таблица игроков
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS players (
+            user_id INTEGER PRIMARY KEY,
+            energy INTEGER DEFAULT 10,
+            candies INTEGER DEFAULT 5,
+            rating INTEGER DEFAULT 1200,
+            wins INTEGER DEFAULT 0,
+            loses INTEGER DEFAULT 0
+        )
+    """)
+    # Таблица покемонов игрока
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS pokemons (
+            user_id INTEGER PRIMARY KEY,
+            name TEXT DEFAULT 'Флеймлинг',
+            type TEXT DEFAULT 'Огонь',
+            emoji TEXT DEFAULT '🔥',
+            level INTEGER DEFAULT 1,
+            exp INTEGER DEFAULT 0,
+            max_exp INTEGER DEFAULT 50,
+            hp INTEGER DEFAULT 100,
+            max_hp INTEGER DEFAULT 100,
+            atk INTEGER DEFAULT 15
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+# Функция регистрации нового игрока
+def register_user(user_id):
+    conn = sqlite3.connect("game.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT user_id FROM players WHERE user_id = ?", (user_id,))
+    if not cursor.fetchone():
+        cursor.execute("INSERT INTO players (user_id) VALUES (?)", (user_id,))
+        cursor.execute("INSERT INTO pokemons (user_id) VALUES (?)", (user_id,))
+        conn.commit()
+    conn.close()
+
+# --- КОМАНДЫ БОТА ---
+@dp.message(Command("start"))
+async def cmd_start(message: types.Message):
+    user_id = message.from_user.id
+    register_user(user_id)
+    
+    # Ссылка на твое мини-приложение (пока локальная или адрес хостинга)
+    web_app_url = "https://example.com" # Позже заменим на твою ссылку
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🎮 Играть в Nexomon", web_app=WebAppInfo(url=web_app_url))]
+    ])
+    
+    await message.answer(
+        "👋 Добро пожаловать в мир карманных монстров!\n\n"
+        "Исследуй мир, лови монстров, повышай их уровень и сражайся на PvP-арене.\n"
+        "Нажми кнопку ниже, чтобы открыть игру:",
+        reply_markup=keyboard
+    )
+
+# --- ЗАПУСК ---
+async def main():
+    init_db()
+    print("Бот успешно запущен и база данных подключена!")
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())

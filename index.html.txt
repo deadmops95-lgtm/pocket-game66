@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карманные Монстры: TMA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Press Start 2P', monospace;
+        }
+        body {
+            background-color: #1a1c23;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        h1 {
+            font-size: 14px;
+            color: #f39c12;
+            text-shadow: 2px 2px #c0392b;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #2c3e50;
+            border: 4px solid #f1c40f;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .monster-box {
+            background: #34495e;
+            border: 2px dashed #bdc3c7;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .monster-img {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .stats {
+            font-size: 10px;
+            line-height: 1.8;
+            text-align: left;
+            margin-top: 10px;
+        }
+        .btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            box-shadow: 0 4px #c0392b;
+            transition: 0.1s;
+            margin-top: 5px;
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 #c0392b;
+        }
+        .btn-green {
+            background-color: #2ecc71;
+            box-shadow: 0 4px #27ae60;
+        }
+        .btn-green:active {
+            box-shadow: 0 0 #27ae60;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 400px;
+        }
+        nav button {
+            font-size: 8px;
+            padding: 10px;
+            flex: 1;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Карманные Монстры</h1>
+        <p style="font-size: 8px; color: #bdc3c7; margin-top: 4px;">Telegram Mini App v0.1</p>
+    </header>
+
+    <div class="container" id="game-screen">
+        <div id="screen-explore">
+            <p style="font-size: 10px; margin-bottom: 15px;">Исследуй дикие земли и найди монстра!</p>
+            <div class="monster-box">
+                <div class="monster-img">🌲</div>
+                <p style="font-size: 10px;">Лесная опушка тиха...</p>
+            </div>
+            <button class="btn btn-green" onclick="findMonster()">🔍 Искать монстра</button>
+        </div>
+    </div>
+
+    <nav>
+        <button class="btn" onclick="switchTab('explore')">Карта</button>
+        <button class="btn" onclick="switchTab('team')">Команда</button>
+        <button class="btn" onclick="switchTab('pvp')">PvP Арена</button>
+    </nav>
+
+    <script>
+        function switchTab(tab) {
+            const screen = document.getElementById('game-screen');
+            if (tab === 'explore') {
+                screen.innerHTML = `
+                    <p style="font-size: 10px; margin-bottom: 15px;">Исследуй дикие земли и найди монстра!</p>
+                    <div class="monster-box">
+                        <div class="monster-img">🌲</div>
+                        <p style="font-size: 10px;">Лесная опушка тиха...</p>
+                    </div>
+                    <button class="btn btn-green" onclick="findMonster()">🔍 Искать монстра</button>
+                `;
+            } else if (tab === 'team') {
+                screen.innerHTML = `
+                    <p style="font-size: 10px; margin-bottom: 15px;">Твой питомец:</p>
+                    <div class="monster-box">
+                        <div class="monster-img">🔥</div>
+                        <p style="font-size: 12px; color: #f39c12;">Флеймлинг</p>
+                        <div class="stats">
+                            Уровень: 1<br>
+                            Тип: Огонь 🔥<br>
+                            Атака: 15<br>
+                            Здоровье: 100 / 100
+                        </div>
+                    </div>
+                    <button class="btn">⚡ Эволюция (Нужен ур. 5)</button>
+                `;
+            } else if (tab === 'pvp') {
+                screen.innerHTML = `
+                    <p style="font-size: 10px; margin-bottom: 15px;">Сражения с игроками</p>
+                    <div class="monster-box">
+                        <div class="monster-img">⚔️</div>
+                        <p style="font-size: 10px;">Рейтинг: 1000 очков</p>
+                    </div>
+                    <button class="btn btn-green" onclick="alert('Поиск соперника...')">Найти противника</button>
+                `;
+            }
+        }
+
+        function findMonster() {
+            const screen = document.getElementById('game-screen');
+            screen.innerHTML = `
+                <p style="font-size: 10px; margin-bottom: 15px; color: #e74c3c;">Внимание! Дикий монстр!</p>
+                <div class="monster-box">
+                    <div class="monster-img">🐀</div>
+                    <p style="font-size: 12px;">Ратлин (Ур. 1)</p>
+                    <div class="stats">
+                        Тип: Нормальный ⚪<br>
+                        Атака: 10 | ХП: 80
+                    </div>
+                </div>
+                <button class="btn btn-green" onclick="alert('Пойман!'); switchTab('explore');">🎯 Бросить покебол</button>
+                <button class="btn" style="background-color: #7f8c8d; box-shadow: 0 4px #7f8c8d;" onclick="switchTab('explore')">Убежать</button>
+            `;
+        }
+    </script>
+
+</body>
+</html>
