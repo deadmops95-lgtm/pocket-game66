@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pokémon TMA: Gen 1 & 2 + Shop</title>
+    <title>Pokémon TMA: Gen 1 & 2 Collection</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
@@ -53,7 +53,7 @@
             box-shadow: var(--shadow);
         }
         .header-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             background: linear-gradient(45deg, #6C5CE7, #a29bfe);
             -webkit-background-clip: text;
@@ -179,6 +179,47 @@
         .type-water { background: linear-gradient(135deg, #74b9ff, #0984e3); }
         .type-grass { background: linear-gradient(135deg, #55efc4, #00b894); }
         .type-electric { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); color: #2d3436 !important; }
+        .type-psychic { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        .type-rock { background: linear-gradient(135deg, #b2bec3, #636e72); }
+
+        /* Сетка коллекции покемонов */
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin-top: 15px;
+        }
+        .collection-item {
+            background: #fafbfc;
+            border: 2px solid #edf2f7;
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .collection-item.active-poke {
+            border-color: var(--primary);
+            background: #f3f0ff;
+        }
+        .collection-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        .collection-name {
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 4px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
 
         .stats-grid {
             display: grid;
@@ -258,7 +299,7 @@
             width: 100%;
             max-width: 500px;
             background: var(--panel);
-            padding: 8px 10px;
+            padding: 8px 6px;
             border-radius: 20px;
             display: flex;
             justify-content: space-around;
@@ -274,7 +315,7 @@
             flex-direction: column;
             align-items: center;
             gap: 2px;
-            padding: 6px 10px;
+            padding: 6px 8px;
             border-radius: 14px;
             transition: 0.2s;
             cursor: pointer;
@@ -315,7 +356,7 @@
 <body>
 
     <header>
-        <div class="header-title">POKEMON TMA</div>
+        <div class="header-title">POKEMON TMA (Gen 1 & 2)</div>
         <div class="energy-block">
             <div class="energy-bar">⚡ <span id="energy-count">10</span>/<span id="max-energy">10</span></div>
             <div class="timer-text" id="energy-timer">Энергия полная</div>
@@ -327,8 +368,8 @@
         <!-- КАРТА / ЛОКАЦИИ -->
         <div id="screen-explore" class="screen">
             <div class="location-selector">
-                <button class="loc-btn active" id="loc-btn-forest" onclick="changeLocation('forest')">🌿 Лес</button>
-                <button class="loc-btn" id="loc-btn-cave" onclick="changeLocation('cave')">⛰️ Пещера</button>
+                <button class="loc-btn active" id="loc-btn-forest" onclick="changeLocation('forest')">🌿 Лес (Gen 1)</button>
+                <button class="loc-btn" id="loc-btn-cave" onclick="changeLocation('cave')">⛰️ Пещера (Gen 2)</button>
                 <button class="loc-btn" id="loc-btn-volcano" onclick="changeLocation('volcano')">🌋 Вулкан</button>
             </div>
 
@@ -336,23 +377,23 @@
                 <p style="font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">Локация</p>
                 <p style="font-size: 15px; font-weight: 700; margin-top: 4px;" id="loc-title">🌿 Густой Лес</p>
                 <div class="big-placeholder" id="loc-icon">🌲</div>
-                <p style="font-size: 11px; color: var(--text-light);" id="loc-desc">Здесь обитают покемоны 1-го поколения.</p>
+                <p style="font-size: 11px; color: var(--text-light);" id="loc-desc">Покемоны 1-го поколения.</p>
             </div>
             <button class="btn btn-success" style="width: 100%; font-size: 14px; padding: 18px;" onclick="findMonster()">
                 🔍 ИСКАТЬ ПОКЕМОНА (-1 ⚡)
             </button>
         </div>
 
-        <!-- КОМАНДА -->
+        <!-- КОМАНДА И КОЛЛЕКЦИЯ -->
         <div id="screen-team" class="screen hidden">
-            <div class="pokemon-card">
+            <div class="pokemon-card" style="margin-bottom: 10px;">
                 <div class="pokemon-header">
                     <div class="pokemon-main-info">
-                        <div class="pokemon-pic-big" id="team-img-container">
-                            <img id="team-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" alt="Charmander">
+                        <div class="pokemon-pic-big">
+                            <img id="team-img" src="" alt="Active Pokemon">
                         </div>
                         <div class="pokemon-name-block">
-                            <span class="p-name" id="team-name">Чармандер</span>
+                            <span class="p-name" id="team-name">...</span>
                             <span class="p-type type-fire" id="team-type">Огонь</span>
                         </div>
                     </div>
@@ -375,6 +416,15 @@
                     <button class="btn btn-primary" onclick="feedMonster()">🍬 Кормить</button>
                 </div>
             </div>
+
+            <!-- СписоК ВСЕХ ПОЙМАННЫХ ПОКЕМОНОВ -->
+            <div class="pokemon-card">
+                <p style="font-size: 13px; font-weight: 700; margin-bottom: 5px;">📦 Ваша коллекция покемонов</p>
+                <p style="font-size: 10px; color: var(--text-light); margin-bottom: 10px;">Нажмите на покемона, чтобы сделать его активным.</p>
+                <div class="collection-grid" id="collection-grid">
+                    <!-- Заполняется динамически -->
+                </div>
+            </div>
         </div>
 
         <!-- АРЕНА -->
@@ -382,7 +432,7 @@
             <div class="explore-card">
                 <div class="big-placeholder" style="font-size: 70px; margin: 10px 0;">⚔️</div>
                 <p style="font-size: 16px; font-weight: 700; margin-bottom: 5px;">PvP Арена</p>
-                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 15px;">Бйся с тренерами и поднимай ELO рейтинг!</p>
+                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 15px;">Бйся с тренерами активным покемоном!</p>
                 <div class="stat-row" style="justify-content: space-around; font-size: 12px; background: #fafbfc; padding: 10px; border-radius: 12px; margin-bottom: 10px;">
                     <span>🏆 Рейтинг: <b id="pvp-rating">1200</b></span>
                     <span style="color: var(--success);">📈 <span id="pvp-wins">0</span> побед</span>
@@ -421,7 +471,8 @@
         <!-- АДМИН-ПАНЕЛЬ -->
         <div id="screen-admin" class="screen hidden">
             <div class="admin-card">
-                <p style="font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--admin);">🛠 Админ-панель</p>
+                <p style="font-size: 15px; font-weight: 700; margin-bottom: 5px; color: var(--admin);">🛠 Админ-панель (@prokudin95)</p>
+                <p style="font-size: 10px; color: var(--text-light); margin-bottom: 15px;">Доступ подтвержден по юзернейму.</p>
                 <div class="stats-grid" style="margin-bottom: 15px;">
                     <div class="stat-row">ВСЕГО ИГРОКОВ <span class="stat-val" id="adm-total">...</span></div>
                     <div class="stat-row">ОНЛАЙН (15мин) <span class="stat-val" id="adm-online">...</span></div>
@@ -442,7 +493,7 @@
                     <img id="wild-img" src="" style="width: 90px; height: 90px; object-fit: contain;" alt="Wild">
                 </div>
                 <p style="font-size: 14px; font-weight: 700; margin-bottom: 4px;" id="wild-title">Дикий покемон!</p>
-                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 20px;">Поймайте его, чтобы получить +3 конфеты!</p>
+                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 20px;">Поймайте его, чтобы добавить в коллекцию!</p>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-outline" style="padding: 12px;" onclick="closeModal()">Убежать</button>
                     <button class="btn btn-success" style="padding: 12px;" onclick="catchMonster()">🎯 Поймать</button>
@@ -471,14 +522,17 @@
     </nav>
 
     <script>
-        const MY_ADMIN_ID = 771301777; 
-
+        // Проверка администратора по нику @prokudin95 и ID
         let userId = 12345;
+        let username = "";
+        
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
             userId = window.Telegram.WebApp.initDataUnsafe.user.id;
+            username = window.Telegram.WebApp.initDataUnsafe.user.username || "";
         }
 
-        if (userId === MY_ADMIN_ID) {
+        // Если юзернейм prokudin95 или ID 771301777 — открываем админку
+        if (username.toLowerCase() === "prokudin95" || userId === 771301777) {
             document.getElementById('nav-admin').classList.remove('hidden');
         }
 
@@ -493,51 +547,53 @@
             streakDays: 1,
             lastStreakTime: 0,
             location: 'forest',
-            pokemon: {
-                name: "Чармандер",
-                type: "Огонь",
-                spriteId: 4,
-                level: 1,
-                exp: 0,
-                maxExp: 50,
-                hp: 100,
-                maxHp: 100,
-                atk: 15,
-                isEvolved: false
-            }
+            // Список всех пойманных покемонов
+            collection: [
+                { id: 1, name: "Чармандер", type: "Огонь", spriteId: 4, level: 1, exp: 0, maxExp: 50, hp: 100, maxHp: 100, atk: 15, isEvolved: false }
+            ],
+            activePokemonIndex: 0
         };
 
+        // Разнообразные пулы покемонов 1 и 2 поколения для локаций
         const locationsData = {
             forest: {
                 title: "🌿 Густой Лес (Gen 1)",
                 icon: "🌲",
-                desc: "Классические покемоны первого поколения.",
+                desc: "Классические покемоны первого поколения Канто.",
                 pool: [
                     { name: "Бульбазавр", type: "Трава", spriteId: 1 },
                     { name: "Чармандер", type: "Огонь", spriteId: 4 },
                     { name: "Сквиртл", type: "Вода", spriteId: 7 },
-                    { name: "Пикачу", type: "Электрический", spriteId: 25 }
+                    { name: "Пикачу", type: "Электрический", spriteId: 25 },
+                    { name: "Катерпи", type: "Трава", spriteId: 10 },
+                    { name: "Видл", type: "Трава", spriteId: 13 },
+                    { name: "Пиджеот", type: "Трава", spriteId: 16 }
                 ]
             },
             cave: {
                 title: "⛰️ Темная Пещера (Gen 2)",
                 icon: "🦇",
-                desc: "Покемоны второго поколения из Джото.",
+                desc: "Покемоны второго поколения из региона Джото.",
                 pool: [
                     { name: "Чикорита", type: "Трава", spriteId: 152 },
                     { name: "Синдаквил", type: "Огонь", spriteId: 155 },
                     { name: "Тотодайл", type: "Вода", spriteId: 158 },
-                    { name: "Пичу", type: "Электрический", spriteId: 172 }
+                    { name: "Пичу", type: "Электрический", spriteId: 172 },
+                    { name: "Марип", type: "Электрический", spriteId: 179 },
+                    { name: "Уву", type: "Камень", spriteId: 185 },
+                    { name: "Хуто", type: "Вода", spriteId: 194 }
                 ]
             },
             volcano: {
-                title: "🌋 Огненный Вулкан",
+                title: "🌋 Огненный Вулкан (Элитная)",
                 icon: "🔥",
-                desc: "Редкие и мощные огненные покемоны.",
+                desc: "Редкие и мощные огненные покемоны двух поколений.",
                 pool: [
                     { name: "Магмар", type: "Огонь", spriteId: 126 },
                     { name: "Тайплози", type: "Огонь", spriteId: 157 },
-                    { name: "Чаризард", type: "Огонь", spriteId: 6 }
+                    { name: "Чаризард", type: "Огонь", spriteId: 6 },
+                    { name: "Магбей", type: "Огонь", spriteId: 240 },
+                    { name: "Энти", type: "Огонь", spriteId: 244 }
                 ]
             }
         };
@@ -548,7 +604,19 @@
             try {
                 let response = await fetch(`https://pocket-game66.onrender.com/api/get_user/${userId}`);
                 let data = await response.json();
-                player = data;
+                
+                // Поддержка старого формата сохранения, если в базе еще нет коллекции
+                if (!data.collection) {
+                    player.candies = data.candies || 5;
+                    player.energy = data.energy || 10;
+                    player.rating = data.rating || 1200;
+                    if (data.pokemon) {
+                        player.collection = [data.pokemon];
+                    }
+                } else {
+                    player = data;
+                }
+                
                 checkDailyBonus();
                 changeLocation(player.location || 'forest', false);
                 updateUI();
@@ -560,10 +628,27 @@
 
         async function saveGameData() {
             try {
+                // Для совместимости с бэкендом отправляем структуру с активным покемоном
+                let payload = {
+                    energy: player.energy,
+                    maxEnergy: player.maxEnergy,
+                    candies: player.candies,
+                    rating: player.rating,
+                    wins: player.wins,
+                    loses: player.loses,
+                    lastLogin: player.lastLogin,
+                    streakDays: player.streakDays,
+                    lastStreakTime: player.lastStreakTime,
+                    location: player.location,
+                    pokemon: player.collection[player.activePokemonIndex] || player.collection[0],
+                    collection: player.collection,
+                    activePokemonIndex: player.activePokemonIndex
+                };
+
                 await fetch(`https://pocket-game66.onrender.com/api/save_user/${userId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(player)
+                    body: JSON.stringify(payload)
                 });
             } catch (e) {
                 console.log("Не удалось сохранить данные на сервер.");
@@ -617,30 +702,33 @@
         function updateUI() {
             document.getElementById('energy-count').innerText = player.energy;
             document.getElementById('max-energy').innerText = player.maxEnergy;
-            
-            document.getElementById('team-img').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${player.pokemon.spriteId}.png`;
-            document.getElementById('team-name').innerText = player.pokemon.name;
-            document.getElementById('team-lvl').innerText = player.pokemon.level;
-            document.getElementById('team-exp').innerText = player.pokemon.exp;
-            document.getElementById('team-max-exp').innerText = player.pokemon.maxExp;
-            document.getElementById('team-hp').innerText = player.pokemon.hp;
-            document.getElementById('team-max-hp').innerText = player.pokemon.maxHp;
-            document.getElementById('team-atk').innerText = player.pokemon.atk;
             document.getElementById('team-candies').innerText = player.candies;
-            
-            let typeBadge = document.getElementById('team-type');
-            typeBadge.innerText = player.pokemon.type;
-            typeBadge.className = "p-type " + (player.pokemon.type === "Вода" ? "type-water" : player.pokemon.type === "Трава" ? "type-grass" : player.pokemon.type === "Электрический" ? "type-electric" : "type-fire");
 
             document.getElementById('pvp-rating').innerText = player.rating;
             document.getElementById('pvp-wins').innerText = player.wins;
             document.getElementById('pvp-loses').innerText = player.loses;
 
-            let expPercent = (player.pokemon.exp / player.pokemon.maxExp) * 100;
+            // Активный покемон
+            let activePoke = player.collection[player.activePokemonIndex] || player.collection[0];
+            
+            document.getElementById('team-img').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${activePoke.spriteId}.png`;
+            document.getElementById('team-name').innerText = activePoke.name;
+            document.getElementById('team-lvl').innerText = activePoke.level;
+            document.getElementById('team-exp').innerText = activePoke.exp;
+            document.getElementById('team-max-exp').innerText = activePoke.maxExp;
+            document.getElementById('team-hp').innerText = activePoke.hp;
+            document.getElementById('team-max-hp').innerText = activePoke.maxHp;
+            document.getElementById('team-atk').innerText = activePoke.atk;
+            
+            let typeBadge = document.getElementById('team-type');
+            typeBadge.innerText = activePoke.type;
+            typeBadge.className = "p-type " + (activePoke.type === "Вода" ? "type-water" : activePoke.type === "Трава" ? "type-grass" : activePoke.type === "Электрический" ? "type-electric" : "type-fire");
+
+            let expPercent = (activePoke.exp / activePoke.maxExp) * 100;
             document.getElementById('team-exp-bar').style.width = expPercent + '%';
 
             let evolveBtn = document.getElementById('btn-evolve');
-            if (player.pokemon.level >= 5 && !player.pokemon.isEvolved) {
+            if (activePoke.level >= 5 && !activePoke.isEvolved) {
                 evolveBtn.disabled = false;
                 evolveBtn.style.backgroundColor = "var(--warning)";
                 evolveBtn.style.color = "#2D3436";
@@ -649,6 +737,33 @@
                 evolveBtn.style.backgroundColor = "#f1f2f6";
                 evolveBtn.style.color = "var(--text-light)";
             }
+
+            // Отрисовка сетки коллекции покемонов
+            renderCollectionGrid();
+        }
+
+        function renderCollectionGrid() {
+            let grid = document.getElementById('collection-grid');
+            grid.innerHTML = "";
+
+            player.collection.forEach((poke, index) => {
+                let item = document.createElement('div');
+                item.className = "collection-item " + (index === player.activePokemonIndex ? "active-poke" : "");
+                item.onclick = () => selectActivePokemon(index);
+
+                item.innerHTML = `
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke.spriteId}.png" alt="${poke.name}">
+                    <span class="collection-name">${poke.name}</span>
+                    <span style="font-size: 9px; color: var(--text-light);">Ур. ${poke.level}</span>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        function selectActivePokemon(index) {
+            player.activePokemonIndex = index;
+            updateUI();
+            saveGameData();
         }
 
         function switchTab(tab) {
@@ -692,9 +807,24 @@
         function catchMonster() {
             closeModal();
             player.candies += 3;
+
+            // Добавляем пойманного покемона в коллекцию
+            player.collection.push({
+                name: currentWild.name,
+                type: currentWild.type,
+                spriteId: currentWild.spriteId,
+                level: 1,
+                exp: 0,
+                maxExp: 50,
+                hp: 100,
+                maxHp: 100,
+                atk: 15,
+                isEvolved: false
+            });
+
             updateUI();
             saveGameData();
-            alert(`🎯 Успех! Вы поймали ${currentWild.name} (+3 конфеты).`);
+            alert(`🎯 Успех! Вы поймали ${currentWild.name} и добавили его в коллекцию (+3 конфеты).`);
         }
 
         function feedMonster() {
@@ -703,34 +833,35 @@
                 return;
             }
             player.candies--;
-            player.pokemon.exp += 25;
+            let activePoke = player.collection[player.activePokemonIndex];
+            activePoke.exp += 25;
 
-            if (player.pokemon.exp >= player.pokemon.maxExp) {
-                player.pokemon.level++;
-                player.pokemon.exp = 0;
-                player.pokemon.maxExp += 25;
-                player.pokemon.maxHp += 20;
-                player.pokemon.hp = player.pokemon.maxHp;
-                player.pokemon.atk += 5;
-                alert(`🎉 Уровень повышен до ${player.pokemon.level}!`);
+            if (activePoke.exp >= activePoke.maxExp) {
+                activePoke.level++;
+                activePoke.exp = 0;
+                activePoke.maxExp += 25;
+                activePoke.maxHp += 20;
+                activePoke.hp = activePoke.maxHp;
+                activePoke.atk += 5;
+                alert(`🎉 Уровень ${activePoke.name} повышен до ${activePoke.level}!`);
             } else {
-                alert('🍬 Покормлено! +25 опыта.');
+                alert(`🍬 Покормлено! ${activePoke.name} получил +25 опыта.`);
             }
             updateUI();
             saveGameData();
         }
 
         function evolveMonster() {
-            if (player.pokemon.level < 5 || player.pokemon.isEvolved) return;
+            let activePoke = player.collection[player.activePokemonIndex];
+            if (activePoke.level < 5 || activePoke.isEvolved) return;
             
-            player.pokemon.isEvolved = true;
-            player.pokemon.name = "Чаризард";
-            player.pokemon.spriteId = 6;
-            player.pokemon.atk += 30;
-            player.pokemon.maxHp += 120;
-            player.pokemon.hp = player.pokemon.maxHp;
+            activePoke.isEvolved = true;
+            activePoke.name = activePoke.name + " (Эволюция)";
+            activePoke.atk += 30;
+            activePoke.maxHp += 120;
+            activePoke.hp = activePoke.maxHp;
             
-            alert('✨ Эволюция! Ваш покемон превратился в мощного Чаризарда!');
+            alert(`✨ Эволюция! Ваш покемон стал намного сильнее!`);
             updateUI();
             saveGameData();
         }
@@ -753,7 +884,6 @@
             }, 1000);
         }
 
-        // Покупка товаров в магазине за конфеты
         function buyItem(itemType, cost) {
             if (player.candies < cost) {
                 alert('❌ Не хватает конфет!');
@@ -765,8 +895,8 @@
                 player.energy = player.maxEnergy;
                 alert('⚡ Энергия полностью восстановлена!');
             } else if (itemType === 'pack') {
-                player.candies += 15; // Возвращаем и добавляем сверху профит
-                alert('🍬 Вы успешно купили набор (+15 конфеток чистым приростом)!');
+                player.candies += 15;
+                alert('🍬 Вы успешно купили набор (+15 конфеток)!');
             }
 
             updateUI();
