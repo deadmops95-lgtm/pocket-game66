@@ -126,7 +126,7 @@ async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     get_player_data(user_id)
     
-    # Ссылка успешно добавлена сюда:
+    # Ссылка на твой GitHub Pages успешно прописана:
     web_app_url = "https://deadmops95-lgtm.github.io/pocket-game66/"
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
