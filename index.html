@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pocket Monsters: TMA</title>
+    <title>Pokémon TMA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
@@ -131,7 +131,13 @@
             align-items: center;
             gap: 15px;
         }
-        .pokemon-pic-big { font-size: 56px; }
+        /* Стили для спрайта покемона */
+        .pokemon-pic-big img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            image-rendering: pixelated; /* Пиксельный ретро-стиль спрайтов */
+        }
         .p-name { font-size: 16px; font-weight: 700; text-align: left; }
         .p-type {
             font-size: 9px;
@@ -280,9 +286,9 @@
         <div id="screen-explore" class="screen">
             <div class="explore-card">
                 <p style="font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">Локация</p>
-                <p style="font-size: 15px; font-weight: 700; margin-top: 4px;">🌿 Дикие луга</p>
+                <p style="font-size: 15px; font-weight: 700; margin-top: 4px;">🌿 Высокая трава</p>
                 <div class="big-placeholder">🌲</div>
-                <p style="font-size: 11px; color: var(--text-light);">Исследуй мир, чтобы встретить разных стихийных монстров.</p>
+                <p style="font-size: 11px; color: var(--text-light);">Исследуй мир, чтобы встретить диких покемонов.</p>
             </div>
             <button class="btn btn-success" style="width: 100%; font-size: 14px; padding: 18px;" onclick="findMonster()">
                 🔍 ИСКАТЬ ПОКЕМОНА (-1 ⚡)
@@ -294,9 +300,12 @@
             <div class="pokemon-card">
                 <div class="pokemon-header">
                     <div class="pokemon-main-info">
-                        <div class="pokemon-pic-big" id="team-img">🔥</div>
+                        <!-- Здесь теперь отображается спрайт покемона -->
+                        <div class="pokemon-pic-big" id="team-img-container">
+                            <img id="team-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" alt="Charmander">
+                        </div>
                         <div class="pokemon-name-block">
-                            <span class="p-name" id="team-name">Флеймлинг</span>
+                            <span class="p-name" id="team-name">Чармандер</span>
                             <span class="p-type type-fire" id="team-type">Огонь</span>
                         </div>
                     </div>
@@ -326,7 +335,7 @@
             <div class="explore-card">
                 <div class="big-placeholder" style="font-size: 70px; margin: 10px 0;">⚔️</div>
                 <p style="font-size: 16px; font-weight: 700; margin-bottom: 5px;">PvP Арена</p>
-                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 15px;">Бйся с соперниками и повышай ELO рейтинг!</p>
+                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 15px;">Бйся с тренерами и поднимай ELO рейтинг!</p>
                 <div class="stat-row" style="justify-content: space-around; font-size: 12px; background: #fafbfc; padding: 10px; border-radius: 12px; margin-bottom: 10px;">
                     <span>🏆 Рейтинг: <b id="pvp-rating">1200</b></span>
                     <span style="color: var(--success);">📈 <span id="pvp-wins">0</span> побед</span>
@@ -341,9 +350,11 @@
         <!-- МОДАЛКА НАХОДКИ ПОКЕМОНА -->
         <div class="modal-overlay" id="monster-modal">
             <div class="modal-card">
-                <div class="big-placeholder" id="wild-emoji" style="font-size: 70px; margin: 5px 0;">💧</div>
-                <p style="font-size: 14px; font-weight: 700; margin-bottom: 4px;" id="wild-title">Дикий Аквапёс!</p>
-                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 20px;">Поймайте его, чтобы получить +3 конфеты для прокачки!</p>
+                <div style="margin: 5px 0;" id="wild-img-container">
+                    <img id="wild-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png" style="width: 90px; height: 90px; object-fit: contain;" alt="Wild">
+                </div>
+                <p style="font-size: 14px; font-weight: 700; margin-bottom: 4px;" id="wild-title">Дикий Сквиртл!</p>
+                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 20px;">Поймайте его, чтобы получить +3 конфеты!</p>
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-outline" style="padding: 12px;" onclick="closeModal()">Убежать</button>
                     <button class="btn btn-success" style="padding: 12px;" onclick="catchMonster()">🎯 Поймать</button>
@@ -380,9 +391,9 @@
             loses: 0,
             lastLogin: Math.floor(Date.now() / 1000),
             pokemon: {
-                name: "Флеймлинг",
+                name: "Чармандер",
                 type: "Огонь",
-                emoji: "🔥",
+                spriteId: 4, // ID спрайта Чармандер в PokeAPI
                 level: 1,
                 exp: 0,
                 maxExp: 50,
@@ -393,11 +404,11 @@
             }
         };
 
-        // База возможных диких покемонов разных стихий
+        // База диких покемонов с их оригинальными ID спрайтов
         let wildPool = [
-            { name: "Аквапёс", type: "Вода", emoji: "💧", cssType: "type-water" },
-            { name: "Спиробут", type: "Трава", emoji: "🌿", cssType: "type-grass" },
-            { name: "Ратлин", type: "Огонь", emoji: "🔥", cssType: "type-fire" }
+            { name: "Сквиртл", type: "Вода", spriteId: 7, cssType: "type-water" },
+            { name: "Бульбазавр", type: "Трава", spriteId: 1, cssType: "type-grass" },
+            { name: "Чармандер", type: "Огонь", spriteId: 4, cssType: "type-fire" }
         ];
         let currentWild = null;
 
@@ -406,8 +417,6 @@
                 let response = await fetch(`http://127.0.0.1:8000/api/get_user/${userId}`);
                 let data = await response.json();
                 player = data;
-                
-                // Проверка ежедневного бонуса (если зашел в новый день)
                 checkDailyBonus();
                 updateUI();
             } catch (e) {
@@ -428,7 +437,6 @@
             }
         }
 
-        // Логика таймера энергии (1 энергия каждые 180 секунд / 3 минуты)
         setInterval(() => {
             if (player.energy < player.maxEnergy) {
                 player.energy++;
@@ -439,10 +447,10 @@
 
         function checkDailyBonus() {
             let now = Math.floor(Date.now() / 1000);
-            if (now - player.lastLogin > 86400) { // Прошли сутки
+            if (now - player.lastLogin > 86400) {
                 player.candies += 5;
                 player.lastLogin = now;
-                alert('🎁 Ежедневный бонус! Вы получили +5 конфет за вход в игру!');
+                alert('🎁 Ежедневный бонус! Получено +5 конфет!');
                 saveGameData();
             }
         }
@@ -451,7 +459,8 @@
             document.getElementById('energy-count').innerText = player.energy;
             document.getElementById('max-energy').innerText = player.maxEnergy;
             
-            document.getElementById('team-img').innerText = player.pokemon.emoji;
+            // Меняем картинку покемона игрока по его ID
+            document.getElementById('team-img').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${player.pokemon.spriteId}.png`;
             document.getElementById('team-name').innerText = player.pokemon.name;
             document.getElementById('team-lvl').innerText = player.pokemon.level;
             document.getElementById('team-exp').innerText = player.pokemon.exp;
@@ -497,16 +506,15 @@
 
         function findMonster() {
             if (player.energy <= 0) {
-                alert('Недостаточно энергии! Подождите восстановления.');
+                alert('Недостаточно энергии!');
                 return;
             }
             player.energy--;
             updateUI();
             saveGameData();
 
-            // Рандомный выбор дикого покемона
             currentWild = wildPool[Math.floor(Math.random() * wildPool.length)];
-            document.getElementById('wild-emoji').innerText = currentWild.emoji;
+            document.getElementById('wild-img').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${currentWild.spriteId}.png`;
             document.getElementById('wild-title').innerText = `Дикий ${currentWild.name} (${currentWild.type})!`;
 
             document.getElementById('monster-modal').classList.add('open');
@@ -521,12 +529,12 @@
             player.candies += 3;
             updateUI();
             saveGameData();
-            alert(`🎯 Успех! Вы поймали ${currentWild.name}. Получено +3 конфеты!`);
+            alert(`🎯 Успех! Вы поймали ${currentWild.name} (+3 конфеты).`);
         }
 
         function feedMonster() {
             if (player.candies < 1) {
-                alert('Нужны конфеты! Ищите монстров на карте.');
+                alert('Нужны конфеты!');
                 return;
             }
             player.candies--;
@@ -551,13 +559,13 @@
             if (player.pokemon.level < 5 || player.pokemon.isEvolved) return;
             
             player.pokemon.isEvolved = true;
-            player.pokemon.name = "Эво-Мастер";
-            player.pokemon.emoji = "🐉";
-            player.pokemon.atk += 25;
-            player.pokemon.maxHp += 100;
+            player.pokemon.name = "Чаризард";
+            player.pokemon.spriteId = 6; // Эволюционная форма (Чаризард)
+            player.pokemon.atk += 30;
+            player.pokemon.maxHp += 120;
             player.pokemon.hp = player.pokemon.maxHp;
             
-            alert('✨ Эволюция завершена! Ваш покемон раскрыл скрытую силу!');
+            alert('✨ Эволюция! Ваш покемон превратился в мощного Чаризарда!');
             updateUI();
             saveGameData();
         }
