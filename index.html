@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pokémon TMA: Gen 1 & 2</title>
+    <title>Pokémon TMA: Gen 1 & 2 + Shop</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@
             --danger: #FF7675;
             --warning: #FDCB6E;
             --admin: #E17055;
+            --shop: #0984e3;
             --bg: #F5F6FA;
             --panel: #FFFFFF;
             --text-dark: #2D3436;
@@ -52,7 +53,7 @@
             box-shadow: var(--shadow);
         }
         .header-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             background: linear-gradient(45deg, #6C5CE7, #a29bfe);
             -webkit-background-clip: text;
@@ -102,7 +103,7 @@
         }
         .hidden { display: none !important; }
 
-        .explore-card, .pokemon-card, .admin-card {
+        .explore-card, .pokemon-card, .admin-card, .shop-card {
             width: 100%;
             background: var(--panel);
             border-radius: 24px;
@@ -178,8 +179,6 @@
         .type-water { background: linear-gradient(135deg, #74b9ff, #0984e3); }
         .type-grass { background: linear-gradient(135deg, #55efc4, #00b894); }
         .type-electric { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); color: #2d3436 !important; }
-        .type-psychic { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
-        .type-rock { background: linear-gradient(135deg, #b2bec3, #636e72); }
 
         .stats-grid {
             display: grid;
@@ -238,14 +237,28 @@
         .btn-primary { background-color: var(--primary); color: white; box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3); }
         .btn-success { background-color: var(--success); color: white; box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3); }
         .btn-admin { background-color: var(--admin); color: white; box-shadow: 0 4px 12px rgba(225, 112, 85, 0.3); }
+        .btn-shop { background-color: var(--shop); color: white; box-shadow: 0 4px 12px rgba(9, 132, 227, 0.3); }
         .btn-outline { background-color: #f1f2f6; color: var(--text-dark); }
         .btn:disabled { background-color: #dfe6e9; color: #b2bec3; cursor: not-allowed; box-shadow: none; }
+
+        .shop-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafbfc;
+            padding: 12px 15px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+        }
+        .shop-info { text-align: left; }
+        .shop-name { font-size: 12px; font-weight: 700; }
+        .shop-desc { font-size: 10px; color: var(--text-light); }
 
         nav {
             width: 100%;
             max-width: 500px;
             background: var(--panel);
-            padding: 8px 12px;
+            padding: 8px 10px;
             border-radius: 20px;
             display: flex;
             justify-content: space-around;
@@ -255,18 +268,18 @@
             background: none;
             border: none;
             color: var(--text-light);
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
-            padding: 8px 14px;
+            gap: 2px;
+            padding: 6px 10px;
             border-radius: 14px;
             transition: 0.2s;
             cursor: pointer;
         }
-        .nav-btn i { font-size: 16px; }
+        .nav-btn i { font-size: 15px; }
         .nav-btn.active {
             background-color: #f3f0ff;
             color: var(--primary);
@@ -302,7 +315,7 @@
 <body>
 
     <header>
-        <div class="header-title">POKEMON TMA (Gen 1-2)</div>
+        <div class="header-title">POKEMON TMA</div>
         <div class="energy-block">
             <div class="energy-bar">⚡ <span id="energy-count">10</span>/<span id="max-energy">10</span></div>
             <div class="timer-text" id="energy-timer">Энергия полная</div>
@@ -314,13 +327,13 @@
         <!-- КАРТА / ЛОКАЦИИ -->
         <div id="screen-explore" class="screen">
             <div class="location-selector">
-                <button class="loc-btn active" id="loc-btn-forest" onclick="changeLocation('forest')">🌿 Лес (Gen 1)</button>
-                <button class="loc-btn" id="loc-btn-cave" onclick="changeLocation('cave')">⛰️ Пещера (Gen 2)</button>
+                <button class="loc-btn active" id="loc-btn-forest" onclick="changeLocation('forest')">🌿 Лес</button>
+                <button class="loc-btn" id="loc-btn-cave" onclick="changeLocation('cave')">⛰️ Пещера</button>
                 <button class="loc-btn" id="loc-btn-volcano" onclick="changeLocation('volcano')">🌋 Вулкан</button>
             </div>
 
             <div class="explore-card">
-                <p style="font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">Выбранная локация</p>
+                <p style="font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;">Локация</p>
                 <p style="font-size: 15px; font-weight: 700; margin-top: 4px;" id="loc-title">🌿 Густой Лес</p>
                 <div class="big-placeholder" id="loc-icon">🌲</div>
                 <p style="font-size: 11px; color: var(--text-light);" id="loc-desc">Здесь обитают покемоны 1-го поколения.</p>
@@ -381,7 +394,31 @@
             </button>
         </div>
 
-        <!-- АДМИН-ПАНЕЛЬ (видна только тебе, если ты админ) -->
+        <!-- МАГАЗИН -->
+        <div id="screen-shop" class="screen hidden">
+            <div class="shop-card">
+                <p style="font-size: 15px; font-weight: 700; margin-bottom: 5px; color: var(--shop);">🛒 Магазин предметов</p>
+                <p style="font-size: 11px; color: var(--text-light); margin-bottom: 15px;">Трать конфеты, добытые в путешествиях!</p>
+                
+                <div class="shop-item">
+                    <div class="shop-info">
+                        <div class="shop-name">⚡ Восстановить энергию</div>
+                        <div class="shop-desc">Полностью восполняет 10 энергии</div>
+                    </div>
+                    <button class="btn btn-shop" style="padding: 8px 14px; flex: unset;" onclick="buyItem('energy', 5)">5 🍬</button>
+                </div>
+
+                <div class="shop-item">
+                    <div class="shop-info">
+                        <div class="shop-name">🍬 Набор конфеток (+15)</div>
+                        <div class="shop-desc">Срочный запас сладостей</div>
+                    </div>
+                    <button class="btn btn-shop" style="padding: 8px 14px; flex: unset;" onclick="buyItem('pack', 10)">10 🍬</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- АДМИН-ПАНЕЛЬ -->
         <div id="screen-admin" class="screen hidden">
             <div class="admin-card">
                 <p style="font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--admin);">🛠 Админ-панель</p>
@@ -425,22 +462,22 @@
         <button class="nav-btn" id="nav-pvp" onclick="switchTab('pvp')">
             <i>🏟️</i> Арена
         </button>
-        <!-- Кнопка админки появляется автоматически для твоего ID -->
+        <button class="nav-btn" id="nav-shop" onclick="switchTab('shop')">
+            <i>🛒</i> Магазин
+        </button>
         <button class="nav-btn hidden" id="nav-admin" onclick="switchTab('admin')">
             <i>🛠️</i> Админ
         </button>
     </nav>
 
     <script>
-        // ЗАМЕНИ НА СВОЙ TELEGRAM ID, ЧТОБЫ ПОЛУЧИТЬ ДОСТУП К АДМИНКЕ В ИГРЕ
-        const MY_ADMIN_ID = 123456789; 
+        const MY_ADMIN_ID = 771301777; 
 
         let userId = 12345;
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
             userId = window.Telegram.WebApp.initDataUnsafe.user.id;
         }
 
-        // Если твой ID совпадает, показываем кнопку админки внизу
         if (userId === MY_ADMIN_ID) {
             document.getElementById('nav-admin').classList.remove('hidden');
         }
@@ -470,7 +507,6 @@
             }
         };
 
-        // ПУЛ ПОКЕМОНОВ 1 И 2 ПОКОЛЕНИЯ ПО ЛОКАЦИЯМ
         const locationsData = {
             forest: {
                 title: "🌿 Густой Лес (Gen 1)",
@@ -480,8 +516,7 @@
                     { name: "Бульбазавр", type: "Трава", spriteId: 1 },
                     { name: "Чармандер", type: "Огонь", spriteId: 4 },
                     { name: "Сквиртл", type: "Вода", spriteId: 7 },
-                    { name: "Пикачу", type: "Электрический", spriteId: 25 },
-                    { name: "Гусепик", type: "Трава", spriteId: 10 }
+                    { name: "Пикачу", type: "Электрический", spriteId: 25 }
                 ]
             },
             cave: {
@@ -492,12 +527,11 @@
                     { name: "Чикорита", type: "Трава", spriteId: 152 },
                     { name: "Синдаквил", type: "Огонь", spriteId: 155 },
                     { name: "Тотодайл", type: "Вода", spriteId: 158 },
-                    { name: "Пичу", type: "Электрический", spriteId: 172 },
-                    { name: "Уву", type: "Камень", spriteId: 185 }
+                    { name: "Пичу", type: "Электрический", spriteId: 172 }
                 ]
             },
             volcano: {
-                title: "🌋 Огненный Вулкан (Элитная)",
+                title: "🌋 Огненный Вулкан",
                 icon: "🔥",
                 desc: "Редкие и мощные огненные покемоны.",
                 pool: [
@@ -544,19 +578,16 @@
             }
         }, 180000);
 
-        // СИСТЕМА ЕЖЕДНЕВНЫХ БОНУСОВ СО СТРИКОМ (STREAK)
         function checkDailyBonus() {
             let now = Math.floor(Date.now() / 1000);
             let lastStreak = player.lastStreakTime || 0;
             
-            // Если прошло больше 24 часов
             if (now - lastStreak > 86400) {
-                // Если прошло больше 48 часов, сбрасываем стрик до 1
                 if (now - lastStreak > 172800 && lastStreak > 0) {
                     player.streakDays = 1;
                 }
                 
-                let bonusCandies = player.streakDays * 3; // Каждый день бонус растет
+                let bonusCandies = player.streakDays * 3;
                 player.candies += bonusCandies;
                 player.lastStreakTime = now;
                 player.streakDays++;
@@ -569,9 +600,11 @@
         function changeLocation(locKey, save = true) {
             player.location = locKey;
             ['forest', 'cave', 'volcano'].forEach(k => {
-                document.getElementById(`loc-btn-${k}`).classList.remove('active');
+                let btn = document.getElementById(`loc-btn-${k}`);
+                if(btn) btn.classList.remove('active');
             });
-            document.getElementById(`loc-btn-${locKey}`).classList.add('active');
+            let activeBtn = document.getElementById(`loc-btn-${locKey}`);
+            if(activeBtn) activeBtn.classList.add('active');
             
             let loc = locationsData[locKey];
             document.getElementById('loc-title').innerText = loc.title;
@@ -619,15 +652,16 @@
         }
 
         function switchTab(tab) {
-            ['explore', 'team', 'pvp', 'admin'].forEach(t => {
+            ['explore', 'team', 'pvp', 'shop', 'admin'].forEach(t => {
                 let screen = document.getElementById(`screen-${t}`);
                 let nav = document.getElementById(`nav-${t}`);
                 if(screen) screen.classList.add('hidden');
                 if(nav) nav.classList.remove('active');
             });
-            document.getElementById(`screen-${tab}`).classList.remove('hidden');
-            let activeNav = document.getElementById(`nav-${tab}`);
-            if(activeNav) activeNav.classList.add('active');
+            let targetScreen = document.getElementById(`screen-${tab}`);
+            let targetNav = document.getElementById(`nav-${tab}`);
+            if(targetScreen) targetScreen.classList.remove('hidden');
+            if(targetNav) targetNav.classList.add('active');
 
             if(tab === 'admin') loadAdminStats();
             updateUI();
@@ -719,7 +753,26 @@
             }, 1000);
         }
 
-        // ФУНКЦИИ АДМИН-ПАНЕЛИ
+        // Покупка товаров в магазине за конфеты
+        function buyItem(itemType, cost) {
+            if (player.candies < cost) {
+                alert('❌ Не хватает конфет!');
+                return;
+            }
+            player.candies -= cost;
+
+            if (itemType === 'energy') {
+                player.energy = player.maxEnergy;
+                alert('⚡ Энергия полностью восстановлена!');
+            } else if (itemType === 'pack') {
+                player.candies += 15; // Возвращаем и добавляем сверху профит
+                alert('🍬 Вы успешно купили набор (+15 конфеток чистым приростом)!');
+            }
+
+            updateUI();
+            saveGameData();
+        }
+
         async function loadAdminStats() {
             try {
                 let res = await fetch(`https://pocket-game66.onrender.com/api/admin/stats/${userId}`);
