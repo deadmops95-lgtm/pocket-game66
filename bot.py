@@ -5,16 +5,23 @@ from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 import asyncio
 import time
 import threading
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import uvicorn
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 
 TOKEN = "8991300297:AAGP__SbLKFoPL-EZvsNvt85U1hilx3rqdg"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-app = Flask(__name__)
-CORS(app)  # Разрешаем запросы от нашей игры
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- БАЗА ДАННЫХ ---
 def init_db():
@@ -102,16 +109,16 @@ def save_player_data(user_id, data):
     conn.commit()
     conn.close()
 
-# --- API СЕРВЕРА ---
-@app.route("/api/get_user/<int:user_id>", methods=["GET"])
-def api_get_user(user_id):
-    return jsonify(get_player_data(user_id))
+# --- FASTAPI ЭНДПОИНТЫ ---
+@app.get("/api/get_user/{user_id}")
+def api_get_user(user_id: int):
+    return get_player_data(user_id)
 
-@app.route("/api/save_user/<int:user_id>", methods=["POST"])
-def api_save_user(user_id):
-    data = request.json
+@app.post("/api/save_user/{user_id}")
+async def api_save_user(user_id: int, request: Request):
+    data = await request.json()
     save_player_data(user_id, data)
-    return jsonify({"status": "success"})
+    return {"status": "success"}
 
 # --- ТЕЛЕГРАМ БОТ ---
 @dp.message(Command("start"))
@@ -119,7 +126,6 @@ async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     get_player_data(user_id)
     
-    # Сюда позже пропишешь ссылку на свой GitHub Pages с игрой
     web_app_url = "https://твой-логин.github.io/репозиторий/"
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
@@ -132,15 +138,13 @@ async def cmd_start(message: types.Message):
         reply_markup=keyboard
     )
 
-def run_flask():
-    # Render передает порт через переменные окружения, либо используем 8000
-    app.run(host="0.0.0.0", port=8000)
+def run_fastapi():
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 async def main():
     init_db()
-    # Запуск Flask в фоне
-    threading.Thread(target=run_flask, daemon=True).start()
-    print("Бот и Flask-сервер запущены!")
+    threading.Thread(target=run_fastapi, daemon=True).start()
+    print("Бот и FastAPI сервер запущены!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
