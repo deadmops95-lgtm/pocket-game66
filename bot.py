@@ -126,7 +126,8 @@ async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     get_player_data(user_id)
     
-    web_app_url = "https://твой-логин.github.io/репозиторий/"
+    # Ссылка успешно добавлена сюда:
+    web_app_url = "https://deadmops95-lgtm.github.io/pocket-game66/"
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🎮 Играть в Покемонов", web_app=WebAppInfo(url=web_app_url))]
