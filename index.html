@@ -131,12 +131,11 @@
             align-items: center;
             gap: 15px;
         }
-        /* Стили для спрайта покемона */
         .pokemon-pic-big img {
             width: 80px;
             height: 80px;
             object-fit: contain;
-            image-rendering: pixelated; /* Пиксельный ретро-стиль спрайтов */
+            image-rendering: pixelated;
         }
         .p-name { font-size: 16px; font-weight: 700; text-align: left; }
         .p-type {
@@ -300,7 +299,6 @@
             <div class="pokemon-card">
                 <div class="pokemon-header">
                     <div class="pokemon-main-info">
-                        <!-- Здесь теперь отображается спрайт покемона -->
                         <div class="pokemon-pic-big" id="team-img-container">
                             <img id="team-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" alt="Charmander">
                         </div>
@@ -393,7 +391,7 @@
             pokemon: {
                 name: "Чармандер",
                 type: "Огонь",
-                spriteId: 4, // ID спрайта Чармандер в PokeAPI
+                spriteId: 4,
                 level: 1,
                 exp: 0,
                 maxExp: 50,
@@ -404,7 +402,6 @@
             }
         };
 
-        // База диких покемонов с их оригинальными ID спрайтов
         let wildPool = [
             { name: "Сквиртл", type: "Вода", spriteId: 7, cssType: "type-water" },
             { name: "Бульбазавр", type: "Трава", spriteId: 1, cssType: "type-grass" },
@@ -414,7 +411,7 @@
 
         async function loadGameData() {
             try {
-                let response = await fetch(`http://127.0.0.1:8000/api/get_user/${userId}`);
+                let response = await fetch(`https://pocket-game66.onrender.com/api/get_user/${userId}`);
                 let data = await response.json();
                 player = data;
                 checkDailyBonus();
@@ -427,7 +424,7 @@
 
         async function saveGameData() {
             try {
-                await fetch(`http://127.0.0.1:8000/api/save_user/${userId}`, {
+                await fetch(`https://pocket-game66.onrender.com/api/save_user/${userId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(player)
@@ -459,7 +456,6 @@
             document.getElementById('energy-count').innerText = player.energy;
             document.getElementById('max-energy').innerText = player.maxEnergy;
             
-            // Меняем картинку покемона игрока по его ID
             document.getElementById('team-img').src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${player.pokemon.spriteId}.png`;
             document.getElementById('team-name').innerText = player.pokemon.name;
             document.getElementById('team-lvl').innerText = player.pokemon.level;
@@ -560,7 +556,7 @@
             
             player.pokemon.isEvolved = true;
             player.pokemon.name = "Чаризард";
-            player.pokemon.spriteId = 6; // Эволюционная форма (Чаризард)
+            player.pokemon.spriteId = 6;
             player.pokemon.atk += 30;
             player.pokemon.maxHp += 120;
             player.pokemon.hp = player.pokemon.maxHp;
