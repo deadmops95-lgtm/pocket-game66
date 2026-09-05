@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 TOKEN = "8991300297:AAGP__SbLKFoPL-EZvsNvt85U1hilx3rqdg"
-ADMIN_IDS = [123456789] # Замени на свой Telegram ID, чтобы получить доступ к админке
+ADMIN_IDS = [771301777] # Твой реальный ID администратора
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -139,7 +139,6 @@ def api_admin_stats(admin_id: int):
     cursor.execute("SELECT COUNT(*) FROM players")
     total_players = cursor.fetchone()[0]
     
-    # Онлайн за последние 15 минут (900 секунд)
     current_time = int(time.time())
     cursor.execute("SELECT COUNT(*) FROM players WHERE ? - last_login < 900", (current_time,))
     online_players = cursor.fetchone()[0]
@@ -176,10 +175,9 @@ async def cmd_start(message: types.Message):
         [InlineKeyboardButton(text="🎮 Играть в Покемонов", web_app=WebAppInfo(url=web_app_url))]
     ])
     
-    # Если это админ, можно добавить кнопку админ-панели прямо в боте или открывать её внутри веб-приложения
     if user_id in ADMIN_IDS:
         keyboard.inline_keyboard.append([
-            [InlineKeyboardButton(text="🛠 Админ-панель (Статистика)", callback_data="admin_stats")]
+            InlineKeyboardButton(text="🛠 Админ-панель (Статистика)", callback_data="admin_stats")
         ])
 
     await message.answer(
